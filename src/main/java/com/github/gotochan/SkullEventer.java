@@ -28,7 +28,8 @@ public class SkullEventer
 		
 		if ( item.getType() == Material.SKULL_ITEM &&
 				item.hasItemMeta() &&
-				item.getItemMeta().getDisplayName().contains("SkullGetter") )
+				item.getItemMeta().hasDisplayName() &&
+				item.getItemMeta().getDisplayName().contains("SkullGetter"))
 		{
 			if ( event.getAction() == Action.LEFT_CLICK_BLOCK )
 			{
