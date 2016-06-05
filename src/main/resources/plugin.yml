@@ -1,0 +1,9 @@
+name: SkullGetter
+version: 0.0.1-SNAPSHOT
+description:
+author: Hinyari_Gohan
+main: com.github.gotochan.SkullGetter
+
+commands:
+  skullgetter:
+    aliases: [sg,skullget,sget]
