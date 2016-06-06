@@ -88,7 +88,7 @@ public class SkullGetter extends JavaPlugin implements Listener
 						}
 						else
 						{
-							player.sendMessage("§a[SkullGetter] " + givePlayer + " さんにSkullGetterを与えました。");
+							player.sendMessage("§a[SkullGetter] " + givePlayer.getName() + " さんにSkullGetterを与えました。");
 							givePlayer.getInventory().addItem(getSkullGetter());
 							givePlayer.sendMessage("§[SkullGetter] SkullGetterを取得しました。");
 						}
