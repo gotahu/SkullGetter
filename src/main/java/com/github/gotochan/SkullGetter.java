@@ -70,7 +70,7 @@ public class SkullGetter extends JavaPlugin implements Listener
 				
 				if ( args[0].equalsIgnoreCase("get") )
 				{
-					player.sendMessage("§[SkullGetter] SkullGetterを取得しました。");
+					player.sendMessage("§6[SkullGetter] SkullGetterを取得しました。");
 					player.getInventory().addItem(getSkullGetter());
 				}
 				else if ( args[0].equalsIgnoreCase("give") )
