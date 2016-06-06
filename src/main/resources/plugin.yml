@@ -6,4 +6,13 @@ main: com.github.gotochan.SkullGetter
 
 commands:
   skullgetter:
+    permissions: sg.use
+    description: SkullGetterのコマンドです。
     aliases: [sg,skullget,sget]
+permissions:
+  sg.admin:
+    children:
+      sg.use: true
+    default: op
+  sg.use:
+    default: true

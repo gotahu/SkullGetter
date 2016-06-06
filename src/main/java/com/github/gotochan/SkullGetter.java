@@ -1,5 +1,8 @@
 package com.github.gotochan;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -51,6 +54,12 @@ public class SkullGetter extends JavaPlugin implements Listener
 		{
 			Player player = (Player) sender;
 			
+			if ( !(player.hasPermission("sg.admin")) )
+			{
+				player.sendMessage("§c[SkullGetter] 権限がありません!");
+				return true;
+			}
+			
 			if ( cmd.getName().equalsIgnoreCase("skullgetter") )
 			{
 				if ( args.length == 0 )
@@ -61,7 +70,7 @@ public class SkullGetter extends JavaPlugin implements Listener
 				
 				if ( args[0].equalsIgnoreCase("get") )
 				{
-					
+					player.sendMessage("§[SkullGetter] SkullGetterを取得しました。");
 					player.getInventory().addItem(getSkullGetter());
 				}
 				else if ( args[0].equalsIgnoreCase("give") )
@@ -79,7 +88,9 @@ public class SkullGetter extends JavaPlugin implements Listener
 						}
 						else
 						{
+							player.sendMessage("§a[SkullGetter] " + givePlayer + " さんにSkullGetterを与えました。");
 							givePlayer.getInventory().addItem(getSkullGetter());
+							givePlayer.sendMessage("§[SkullGetter] SkullGetterを取得しました。");
 						}
 					}
 					else
@@ -122,6 +133,9 @@ public class SkullGetter extends JavaPlugin implements Listener
 		@SuppressWarnings("deprecation")
 		ItemStack skullgetter = new ItemStack(Material.SKULL_ITEM, 1, (short)0, (byte)3);
 		ItemMeta skull_meta = skullgetter.getItemMeta();
+		List<String> lore = new ArrayList<String>();
+		lore.add("§6右クリックで使用");
+		skull_meta.setLore(lore);
 		skull_meta.setDisplayName("§r§aSkullGetter");
 		skullgetter.setItemMeta(skull_meta);
 		return skullgetter;

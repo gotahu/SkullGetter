@@ -26,6 +26,12 @@ public class SkullEventer
 			return;
 		}
 		
+		if ( !(player.hasPermission("sg.use")) )
+		{
+			player.sendMessage("§c[SkullGetter] 権限がありません!");
+			return;
+		}
+		
 		if ( item.getType() == Material.SKULL_ITEM &&
 				item.hasItemMeta() &&
 				item.getItemMeta().hasDisplayName() &&
@@ -101,6 +107,7 @@ public class SkullEventer
 			{
 				clickplayer.openInventory(skullInventory.otherPlayerInventory());
 				clickplayer.sendMessage("§6[SkullGetter] 読み込みに時間がかかる場合があります。");
+				return;
 			}
 			if ( !item.hasItemMeta() )
 			{
