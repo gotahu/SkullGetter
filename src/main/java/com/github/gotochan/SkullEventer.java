@@ -54,6 +54,7 @@ public class SkullEventer
 		Inventory inventory = event.getClickedInventory();
 		ItemStack item = event.getCurrentItem();
 		SkullInventory skullInventory = new SkullInventory();
+		ItemStack skull;
 		
 		if ( inventory == null )
 		{
@@ -89,7 +90,7 @@ public class SkullEventer
 			Player selected = Bukkit.getPlayer(item.getItemMeta().getDisplayName());
 			String name = "§r" + selected.getName();
 			
-			clickplayer.getInventory().addItem(skullInventory.getSkull(selected));
+			clickplayer.getInventory().addItem(getSkullItem(selected.getName()));
 			clickplayer.sendMessage("§a[SkullGetter] " + name + " の頭をインベントリに追加しました。");
 			
 		}
@@ -118,12 +119,30 @@ public class SkullEventer
 			{
 				return;
 			}
-			OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(item.getItemMeta().getDisplayName());
-			clickplayer.getInventory().addItem(
-					skullInventory.getSkullOffline(offlinePlayer));
-			String name = "§r" + offlinePlayer.getName();
+			
+			skull = getSkullItem(item.getItemMeta().getDisplayName());
+			String name = "§r" + skull.getItemMeta().getDisplayName();
 			clickplayer.sendMessage("§a[SkullGetter] " + name  + " の頭をインベントリに追加しました。");
 			return;
+		}
+	}
+	
+	@SuppressWarnings("deprecation")
+	private static ItemStack getSkullItem(String name)
+	{
+		OfflinePlayer offlinePlayer;
+		Player player;
+		SkullInventory skullInventory = new SkullInventory();
+		
+		if ( Bukkit.getServer().getPlayer(name) == null )
+		{
+			offlinePlayer = Bukkit.getOfflinePlayer(name);
+			return skullInventory.getSkullOffline(offlinePlayer);
+		}
+		else
+		{
+			player = Bukkit.getServer().getPlayer(name);
+			return skullInventory.getSkull(player);
 		}
 	}
 	

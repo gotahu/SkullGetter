@@ -1,7 +1,9 @@
 package com.github.gotochan;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,14 +16,28 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import net.milkbowl.vault.chat.Chat;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
+
 public class SkullGetter extends JavaPlugin implements Listener
 {
+	
+	private static final Logger log = Logger.getLogger("Minecraft");
+	public static Economy econ = null;
+	public static Permission perms = null;
+	public static Chat chat = null;
+	
+	public static SkullGetter instance;
+	
 	@Override
 	public void onEnable()
 	{
+		instance = this;
 		getServer().getPluginManager().registerEvents(this, this);
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 		
@@ -35,6 +51,14 @@ public class SkullGetter extends JavaPlugin implements Listener
 				}
 			}
 		} , 0L, 10L);
+		
+		if (!setupEconomy() ) {
+			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+			getServer().getPluginManager().disablePlugin(this);
+			return;
+		}
+		setupPermissions();
+		setupChat();
 	}
 	
 	@Override
@@ -153,5 +177,33 @@ public class SkullGetter extends JavaPlugin implements Listener
 		SkullEventer.InventoryClick(event);
 	}
 	
+	private boolean setupEconomy() {
+		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+			return false;
+		}
+		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
+		if (rsp == null) {
+			return false;
+		}
+		econ = rsp.getProvider();
+		return econ != null;
+	}
+	
+	private boolean setupChat() {
+		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
+		chat = rsp.getProvider();
+		return chat != null;
+	}
+	
+	private boolean setupPermissions() {
+		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
+		perms = rsp.getProvider();
+		return perms != null;
+	}
+	
+	public File getPluginJarFile()
+	{
+		return this.getFile();
+	}
 	
 }
