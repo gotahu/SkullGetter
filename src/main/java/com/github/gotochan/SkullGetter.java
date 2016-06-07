@@ -38,6 +38,18 @@ public class SkullGetter extends JavaPlugin implements Listener
 	public void onEnable()
 	{
 		instance = this;
+		SkullConfigrable sGetter = new SkullConfigrable(this);
+		sGetter.loadConfig();
+		if ( SkullConfigrable.isEnableEconomy )
+		{
+			if (!setupEconomy() ) {
+				log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+				getServer().getPluginManager().disablePlugin(this);
+				return;
+			}
+			setupPermissions();
+			setupChat();
+		}
 		getServer().getPluginManager().registerEvents(this, this);
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
 		
@@ -52,13 +64,6 @@ public class SkullGetter extends JavaPlugin implements Listener
 			}
 		} , 0L, 10L);
 		
-		if (!setupEconomy() ) {
-			log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-			getServer().getPluginManager().disablePlugin(this);
-			return;
-		}
-		setupPermissions();
-		setupChat();
 	}
 	
 	@Override
@@ -126,6 +131,12 @@ public class SkullGetter extends JavaPlugin implements Listener
 				{
 					helpMessage(player);
 				}
+				else if ( args[0].equalsIgnoreCase("reload") )
+				{
+					SkullConfigrable sConfigrable = new SkullConfigrable(this);
+					sConfigrable.loadConfig();
+					player.sendMessage("§e[SkullGetter] Configをリロードしました。");
+				}
 				else
 				{
 					helpMessage(player);
@@ -142,9 +153,10 @@ public class SkullGetter extends JavaPlugin implements Listener
 	private void helpMessage(Player player)
 	{
 		String[] msg = {
-				"§6/sg get - スカルゲッターをインベントリに追加します。",
-				"§6/sg give <player> - スカルゲッターを指定したプレイヤーのインベントリに追加します。",
-				"§6/sg help - このヘルプを参照します。",
+				"§6§l/sg get §r§6- スカルゲッターをインベントリに追加します。",
+				"§6§l/sg give <player> §r§6- スカルゲッターを指定したプレイヤーのインベントリに追加します。",
+				"§6§l/sg help §r§6- このヘルプを参照します。",
+				"§6§l/sg reload §r§6- Configをリロードします。"
 		};
 		for ( int i = 0; i < msg.length; i++ )
 		{

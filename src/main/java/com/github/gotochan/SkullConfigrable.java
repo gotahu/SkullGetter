@@ -8,8 +8,8 @@ public class SkullConfigrable
 	public ConfigAccessor configAccessor;
 	public FileConfiguration config;
 	
-	public boolean isEnableEconomy;
-	public int EconomyValue;
+	public static boolean isEnableEconomy;
+	public static int EconomyValue;
 	
 	public SkullConfigrable(SkullGetter plugin)
 	{
@@ -35,13 +35,4 @@ public class SkullConfigrable
 		plugin.saveConfig();
 	}
 	
-	public int getEconomyValue()
-	{
-		return this.EconomyValue;
-	}
-	
-	public boolean isEnableEconomy()
-	{
-		return this.isEnableEconomy;
-	}
 }

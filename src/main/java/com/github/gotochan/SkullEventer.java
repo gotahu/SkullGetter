@@ -11,6 +11,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import net.milkbowl.vault.economy.Economy;
+
 public class SkullEventer
 {
 	protected static SkullInventory sInventory = new SkullInventory();
@@ -47,7 +49,6 @@ public class SkullEventer
 	}
 	
 	
-	@SuppressWarnings("deprecation")
 	public static void InventoryClick(InventoryClickEvent event)
 	{
 		Player clickplayer = (Player) event.getWhoClicked();
@@ -55,6 +56,9 @@ public class SkullEventer
 		ItemStack item = event.getCurrentItem();
 		SkullInventory skullInventory = new SkullInventory();
 		ItemStack skull;
+		Economy econ = SkullGetter.econ;
+		boolean isEnable = SkullConfigrable.isEnableEconomy;
+		int value = SkullConfigrable.EconomyValue;
 		
 		if ( inventory == null )
 		{
@@ -87,9 +91,22 @@ public class SkullEventer
 				return;
 			}
 			
+			if ( isEnable )
+			{
+				if ( econ.has(clickplayer, value) )
+				{
+					econ.withdrawPlayer(clickplayer, value);
+				}
+				else
+				{
+					clickplayer.sendMessage(
+							"§c[SkullGetter] Skullをゲットするには " +
+									String.format("%s", econ.format(value)) + " 必要です!");
+					return;
+				}
+			}
 			Player selected = Bukkit.getPlayer(item.getItemMeta().getDisplayName());
 			String name = "§r" + selected.getName();
-			
 			clickplayer.getInventory().addItem(getSkullItem(selected.getName()));
 			clickplayer.sendMessage("§a[SkullGetter] " + name + " の頭をインベントリに追加しました。");
 			
@@ -120,9 +137,24 @@ public class SkullEventer
 				return;
 			}
 			
+			if ( isEnable )
+			{
+				if ( econ.has(clickplayer, value) )
+				{
+					econ.withdrawPlayer(clickplayer, value);
+				}
+				else
+				{
+					clickplayer.sendMessage(
+							"§c[SkullGetter] Skullをゲットするには" +
+									String.format("%s", econ.format(value)) + "必要です!");
+					return;
+				}
+			}
 			skull = getSkullItem(item.getItemMeta().getDisplayName());
 			String name = "§r" + skull.getItemMeta().getDisplayName();
 			clickplayer.sendMessage("§a[SkullGetter] " + name  + " の頭をインベントリに追加しました。");
+			clickplayer.getInventory().addItem(skull);
 			return;
 		}
 	}
