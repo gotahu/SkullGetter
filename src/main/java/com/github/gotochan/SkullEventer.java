@@ -7,6 +7,7 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -96,6 +97,8 @@ public class SkullEventer
 				if ( econ.has(clickplayer, value) )
 				{
 					econ.withdrawPlayer(clickplayer, value);
+					clickplayer.sendMessage("§a[SkullGetter] " + String.format("%s", econ.format(value)) +
+							" が所持金から引かれました。");
 				}
 				else
 				{
@@ -177,6 +180,17 @@ public class SkullEventer
 			return skullInventory.getSkull(player);
 		}
 	}
+	
+	public static void InventoryDrag(InventoryDragEvent event)
+	{
+		Inventory inventory = event.getInventory();
+		if ( inventory.getName().contains("SkullInventory"))
+		{
+			event.setCancelled(true);
+			return;
+		}
+	}
+	
 	
 }
 

@@ -13,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -187,6 +188,12 @@ public class SkullGetter extends JavaPlugin implements Listener
 	public void onInventoryClickEvent(InventoryClickEvent event)
 	{
 		SkullEventer.InventoryClick(event);
+	}
+	
+	@EventHandler
+	public void onInventoryDragEvent(InventoryDragEvent event)
+	{
+		SkullEventer.InventoryDrag(event);
 	}
 	
 	private boolean setupEconomy() {
