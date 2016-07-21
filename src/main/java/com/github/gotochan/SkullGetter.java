@@ -27,14 +27,14 @@ import net.milkbowl.vault.permission.Permission;
 
 public class SkullGetter extends JavaPlugin implements Listener
 {
-	
+
 	private static final Logger log = Logger.getLogger("Minecraft");
 	public static Economy econ = null;
 	public static Permission perms = null;
 	public static Chat chat = null;
-	
+
 	public static SkullGetter instance;
-	
+
 	@Override
 	public void onEnable()
 	{
@@ -44,7 +44,7 @@ public class SkullGetter extends JavaPlugin implements Listener
 		if ( SkullConfigrable.isEnableEconomy )
 		{
 			if (!setupEconomy() ) {
-				log.severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
+				log.severe(String.format("[%s] - Vaultが導入されていません!", getDescription().getName()));
 				getServer().getPluginManager().disablePlugin(this);
 				return;
 			}
@@ -53,9 +53,9 @@ public class SkullGetter extends JavaPlugin implements Listener
 		}
 		getServer().getPluginManager().registerEvents(this, this);
 		BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
-		
+
 		scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
-			
+
 			public void run()
 			{
 				if ( SkullEventer.sInventory != null )
@@ -64,15 +64,15 @@ public class SkullGetter extends JavaPlugin implements Listener
 				}
 			}
 		} , 0L, 10L);
-		
+
 	}
-	
+
 	@Override
 	public void onDisable()
 	{
-		
+
 	}
-	
+
 	@Override
 	public boolean onCommand(
 			CommandSender sender,
@@ -83,13 +83,13 @@ public class SkullGetter extends JavaPlugin implements Listener
 		if ( sender instanceof Player )
 		{
 			Player player = (Player) sender;
-			
+
 			if ( !(player.hasPermission("sg.admin")) )
 			{
 				player.sendMessage("§c[SkullGetter] 権限がありません!");
 				return true;
 			}
-			
+
 			if ( cmd.getName().equalsIgnoreCase("skullgetter") )
 			{
 				if ( args.length == 0 )
@@ -97,7 +97,7 @@ public class SkullGetter extends JavaPlugin implements Listener
 					helpMessage(player);
 					return true;
 				}
-				
+
 				if ( args[0].equalsIgnoreCase("get") )
 				{
 					player.sendMessage("§6[SkullGetter] SkullGetterを取得しました。");
@@ -150,7 +150,7 @@ public class SkullGetter extends JavaPlugin implements Listener
 		}
 		return false;
 	}
-	
+
 	private void helpMessage(Player player)
 	{
 		String[] msg = {
@@ -159,12 +159,11 @@ public class SkullGetter extends JavaPlugin implements Listener
 				"§6§l/sg help §r§6- このヘルプを参照します。",
 				"§6§l/sg reload §r§6- Configをリロードします。"
 		};
-		for ( int i = 0; i < msg.length; i++ )
-		{
-			player.sendMessage(msg[i]);
+		for (String element : msg) {
+			player.sendMessage(element);
 		}
 	}
-	
+
 	private ItemStack getSkullGetter()
 	{
 		@SuppressWarnings("deprecation")
@@ -177,52 +176,50 @@ public class SkullGetter extends JavaPlugin implements Listener
 		skullgetter.setItemMeta(skull_meta);
 		return skullgetter;
 	}
-	
+
 	@EventHandler
 	public void onInteractEvent(PlayerInteractEvent event)
 	{
 		SkullEventer.Interact(event);
 	}
-	
+
 	@EventHandler
 	public void onInventoryClickEvent(InventoryClickEvent event)
 	{
 		SkullEventer.InventoryClick(event);
 	}
-	
+
 	@EventHandler
 	public void onInventoryDragEvent(InventoryDragEvent event)
 	{
 		SkullEventer.InventoryDrag(event);
 	}
-	
+
 	private boolean setupEconomy() {
-		if (getServer().getPluginManager().getPlugin("Vault") == null) {
+		if (getServer().getPluginManager().getPlugin("Vault") == null)
 			return false;
-		}
 		RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-		if (rsp == null) {
+		if (rsp == null)
 			return false;
-		}
 		econ = rsp.getProvider();
 		return econ != null;
 	}
-	
+
 	private boolean setupChat() {
 		RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
 		chat = rsp.getProvider();
 		return chat != null;
 	}
-	
+
 	private boolean setupPermissions() {
 		RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
 		perms = rsp.getProvider();
 		return perms != null;
 	}
-	
+
 	public File getPluginJarFile()
 	{
 		return this.getFile();
 	}
-	
+
 }

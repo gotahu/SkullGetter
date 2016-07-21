@@ -16,40 +16,39 @@ import net.milkbowl.vault.economy.Economy;
 
 public class SkullEventer
 {
-	protected static SkullInventory sInventory = new SkullInventory();
-	
+	protected static SkullInventory sInventory;
+	public SkullEventer() {
+		sInventory = new SkullInventory();
+	}
+
 	/* 右クリックでアイテム呼び出し */
 	public static void Interact(PlayerInteractEvent event)
 	{
 		Player player = event.getPlayer();
 		ItemStack item = player.getItemInHand();
-		
+
 		if ( item == null )
-		{
 			return;
-		}
-		
+
 		if ( !(player.hasPermission("sg.use")) )
 		{
 			player.sendMessage("§c[SkullGetter] 権限がありません!");
 			return;
 		}
-		
+
 		if ( item.getType() == Material.SKULL_ITEM &&
 				item.hasItemMeta() &&
 				item.getItemMeta().hasDisplayName() &&
 				item.getItemMeta().getDisplayName().contains("SkullGetter"))
 		{
 			if ( event.getAction() == Action.LEFT_CLICK_BLOCK )
-			{
 				return;
-			}
 			event.setCancelled(true);
 			player.openInventory(sInventory.createInventory());
 		}
 	}
-	
-	
+
+
 	public static void InventoryClick(InventoryClickEvent event)
 	{
 		Player clickplayer = (Player) event.getWhoClicked();
@@ -60,38 +59,30 @@ public class SkullEventer
 		Economy econ = SkullGetter.econ;
 		boolean isEnable = SkullConfigrable.isEnableEconomy;
 		int value = SkullConfigrable.EconomyValue;
-		
+
 		if ( inventory == null )
-		{
 			return;
-		}
-		
+
 		if ( item == null )
-		{
 			return;
-		}
-		
+
 		if ( inventory.getName().equalsIgnoreCase("SkullInventory") )
 		{
 			event.setCancelled(true);
 			clickplayer.playSound(clickplayer.getLocation(), Sound.CLICK, 10L, (float) 1.5);
-			
+
 			if ( item.getType() == Material.EMERALD )
 			{
-				clickplayer.openInventory(skullInventory.otherPlayerInventory());
+				clickplayer.openInventory(skullInventory.createInventory());
 				clickplayer.sendMessage("§6[SkullGetter] 読み込みに時間がかかる場合があります。");
 				return;
 			}
 			if ( !item.hasItemMeta() )
-			{
 				return;
-			}
-			
+
 			if ( !item.getItemMeta().hasDisplayName() )
-			{
 				return;
-			}
-			
+
 			if ( isEnable )
 			{
 				if ( econ.has(clickplayer, value) )
@@ -112,7 +103,7 @@ public class SkullEventer
 			String name = "§r" + selected.getName();
 			clickplayer.getInventory().addItem(getSkullItem(selected.getName()));
 			clickplayer.sendMessage("§a[SkullGetter] " + name + " の頭をインベントリに追加しました。");
-			
+
 		}
 		else if ( inventory.getName().contains("MobSkullInventory") )
 		{
@@ -120,26 +111,20 @@ public class SkullEventer
 			clickplayer.playSound(clickplayer.getLocation(), Sound.CLICK, 10L, (float) 1.5);
 			if ( item.getType() == Material.DIAMOND_AXE )
 			{
-				clickplayer.openInventory(skullInventory.otherPlayerInventory2());
-				clickplayer.sendMessage("§6[SkullGetter] 読み込みに時間がかかる場合があります。");
+				clickplayer.openInventory(skullInventory.o_Inventory2);
 				return;
 			}
 			else if ( item.getType() == Material.GOLD_AXE )
 			{
-				clickplayer.openInventory(skullInventory.otherPlayerInventory());
-				clickplayer.sendMessage("§6[SkullGetter] 読み込みに時間がかかる場合があります。");
+				clickplayer.openInventory(skullInventory.o_Inventory);
 				return;
 			}
 			if ( !item.hasItemMeta() )
-			{
 				return;
-			}
-			
+
 			if ( !item.getItemMeta().hasDisplayName() )
-			{
 				return;
-			}
-			
+
 			if ( isEnable )
 			{
 				if ( econ.has(clickplayer, value) )
@@ -161,14 +146,14 @@ public class SkullEventer
 			return;
 		}
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	private static ItemStack getSkullItem(String name)
 	{
 		OfflinePlayer offlinePlayer;
 		Player player;
 		SkullInventory skullInventory = new SkullInventory();
-		
+
 		if ( Bukkit.getServer().getPlayer(name) == null )
 		{
 			offlinePlayer = Bukkit.getOfflinePlayer(name);
@@ -180,7 +165,7 @@ public class SkullEventer
 			return skullInventory.getSkull(player);
 		}
 	}
-	
+
 	public static void InventoryDrag(InventoryDragEvent event)
 	{
 		Inventory inventory = event.getInventory();
@@ -190,7 +175,7 @@ public class SkullEventer
 			return;
 		}
 	}
-	
-	
+
+
 }
 
